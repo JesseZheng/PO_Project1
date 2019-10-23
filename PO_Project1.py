@@ -5,6 +5,7 @@ import csv
 import sys, time
 
 
+# Class for file download request
 class DownloadRequest:
     total_number = 0
 
@@ -64,6 +65,7 @@ class DownloadRequest:
         return self.get_total_service_time() + self.get_total_wait_time()
 
 
+# Class for Service Center(e.g. CPU, disk, etc.)
 class ServiceCenter:
 
     def __init__(self, name, service_demand):
@@ -128,7 +130,7 @@ def minimal_start_date_broker(disk_group):
         rtn_index = 0
     return rtn_index
 
-
+# Question 4
 # Get index of disk that has the shortest queue length
 def queue_broker(disk_group):
     minimal_queue_length = float('inf')
@@ -140,6 +142,8 @@ def queue_broker(disk_group):
             rtn_index = i
     return rtn_index
 
+
+# Question 2
 # in order {disk1, disk2, disk3, disk4}
 def simple_broker(index):
     rtn_index = index
@@ -155,8 +159,11 @@ def simple_broker(index):
         rtn_index = 0
     return rtn_index
 
+
+# Question 3,4,5
 # Load Balance broker
 def balance_broker(disk_group):
+    # the disk
     rtn_index = -1
     balance = float('inf')
     for i in range(len(disk_group)):
@@ -168,7 +175,7 @@ def balance_broker(disk_group):
     return rtn_index
 
 
-def main():
+def MM1_Model():
 
     cpu = ServiceCenter("CPU", 0.0394)
     disk1 = ServiceCenter("Disk1", 0.0771)
@@ -177,13 +184,13 @@ def main():
     disk4 = ServiceCenter("Disk4", 0.235)
     disk_group = [disk1, disk2, disk3, disk4]
 
-    cpu_utilization = 0.99
+    cpu_utilization = 1.2
     max_download_time = 20
     arrival_rate = cpu_utilization/cpu.service_demand
     cpu_theoretic_service_rate = 1/cpu.service_demand
 
     # Broker strategy
-    broker = 4
+    broker = 1
     disk_index = -1
 
     # Current date
@@ -291,7 +298,7 @@ def main():
         current_date = arrival_date
 
         # calculate the average service rate(throughput)
-        service_rate = len(cpu_completed_requests)/current_date
+        service_rate = len(disk_completed_requests)/current_date
 
         # CPU and disk Statistics
         cpu_stats = {}
@@ -341,7 +348,7 @@ def main():
         #     counter = 0
 
         # Print the real-time information of the system
-        sys.stdout.write('\rRun time: %.2fs. service rate: %.2f. CPU: %s. Disk group: %s. Max download time: %.2fs. # of concurrent download: %s %s'
+        sys.stdout.write('\rRun time: %.2fs. Throughput: %.2f. CPU: %s. Disk group: %s. Max download time: %.2fs. Length of queue: %s %s'
                          % (current_date, service_rate, cpu_stats, disk_group_stats, max_response_time, cpu.queue_length, [d.queue_length for d in disk_group]))
         sys.stdout.flush()
 
@@ -369,7 +376,7 @@ def main():
     print("")
     print("Run time: %.2f" % current_date)
     print("Number of downloads completed: ", len(disk_completed_requests))
-    print("Number of concurrent downloads: ", Concurrent_Downloads)
+    # print("Number of concurrent downloads: ", Concurrent_Downloads)
     print("Mean Service Time: ", Mean_Service_Time)
     print("Mean Wait Time: ", Mean_Wait)
     print("Mean Response Time: ", Mean_Response_Time)
@@ -399,5 +406,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    MM1_Model()
 
